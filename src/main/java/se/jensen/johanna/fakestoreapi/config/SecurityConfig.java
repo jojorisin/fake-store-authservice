@@ -50,6 +50,7 @@ public class SecurityConfig {
             auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/users/**").hasRole("USER")
+                .requestMatchers("/api/internal/auth/**").permitAll()
                 .anyRequest().authenticated())
         .oauth2ResourceServer(oauth2 ->
             oauth2.jwt(jwt ->
