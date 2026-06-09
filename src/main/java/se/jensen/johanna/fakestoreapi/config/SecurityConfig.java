@@ -49,7 +49,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/users/**").hasRole("USER")
+                .requestMatchers("/api/users/**").hasAuthority("SCOPE_ROLE_USER")
                 .requestMatchers("/api/internal/auth/**").permitAll()
                 .anyRequest().authenticated())
         .oauth2ResourceServer(oauth2 ->
@@ -109,7 +109,6 @@ public class SecurityConfig {
   @Bean
   public JwtAuthenticationConverter jwtAuthenticationConverter() {
     JwtGrantedAuthoritiesConverter converter = new JwtGrantedAuthoritiesConverter();
-    converter.setAuthorityPrefix("");
     converter.setAuthoritiesClaimName("scope");
 
     JwtAuthenticationConverter authenticationConverter =
