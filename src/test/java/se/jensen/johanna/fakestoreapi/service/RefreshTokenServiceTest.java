@@ -100,11 +100,5 @@ class RefreshTokenServiceTest {
 
   }
 
-  @Test
-  void rotateRefreshToken() {
-  }
 
-  @Test
-  void deleteRefreshToken() {
-  }
 }

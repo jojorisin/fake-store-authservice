@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Embeddable
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED) // Hibernate-vänlig men "dold"
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Address {
 
