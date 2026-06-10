@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum ErrorType {
-  AUTH_INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED),
   USER_ALREADY_EXISTS(HttpStatus.CONFLICT),
   TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED),
   ILLEGAL_STATE(HttpStatus.INTERNAL_SERVER_ERROR),

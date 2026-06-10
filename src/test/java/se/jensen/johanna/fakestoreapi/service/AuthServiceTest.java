@@ -7,7 +7,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,10 +16,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
 import se.jensen.johanna.fakestoreapi.dto.AuthResult;
 import se.jensen.johanna.fakestoreapi.dto.LoginRequest;
 import se.jensen.johanna.fakestoreapi.dto.RefreshResult;
@@ -36,14 +31,10 @@ class AuthServiceTest {
 
   @InjectMocks
   private AuthService authService;
-  @Mock
-  private MyUserDetailsService userDetailsService;
+
   @Mock
   private TokenService tokenService;
-  @Mock
-  private JwtEncoder jwtEncoder;
-  @Mock
-  private JwtDecoder jwtDecoder;
+
   @Mock
   private RefreshTokenService refreshTokenService;
   @Mock
@@ -53,7 +44,6 @@ class AuthServiceTest {
 
   private MyUserDetails userDetails;
 
-  private Jwt jwt;
   private UUID userId;
   private RefreshToken refreshToken;
   private AppUser user;
@@ -64,13 +54,6 @@ class AuthServiceTest {
     userId = UUID.randomUUID();
     user = new AppUser(userId, Role.USER, "test@test.com", "hashedPw", null, Instant.now(),
         null);
-    jwt = Jwt.withTokenValue("mock-token")
-        .header("alg", "none")
-        .subject(userId.toString())
-        .claim("scope", "ROLE_USER")
-        .build();
-    SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_USER");
-    List<SimpleGrantedAuthority> authorities = List.of(authority);
 
     userDetails = new MyUserDetails(user);
 
@@ -89,7 +72,7 @@ class AuthServiceTest {
 
     AuthResult result = authService.login(loginRequest);
 
-    assertThat(result.loginResponse().userId().equals(userId));
+    assertThat(result.loginResponse().userId()).isEqualTo(userId);
     assertThat(result.loginResponse().accessToken()).isNotNull();
     assertThat(result.loginResponse().accessToken()).isEqualTo("mock-token");
     assertThat(result.refreshToken()).isNotNull();
@@ -109,7 +92,7 @@ class AuthServiceTest {
 
     AuthResult result = authService.register(request);
 
-    assertThat(result.loginResponse().userId().equals(userId));
+    assertThat(result.loginResponse().userId()).isEqualTo(userId);
     assertThat(result.loginResponse().accessToken()).isNotNull();
     assertThat(result.loginResponse().accessToken()).isEqualTo("mock-token");
     assertThat(result.refreshToken()).isNotNull();
@@ -143,7 +126,4 @@ class AuthServiceTest {
   }
 
 
-  @Test
-  void logout() {
-  }
 }

@@ -47,6 +47,7 @@ public class RefreshTokenService {
         });
   }
 
+  @Transactional
   public void verifyExpiration(RefreshToken refreshToken) {
     if (refreshToken.isExpired()) {
       log.info("Refresh token expired for user: {}", refreshToken.getUser().getEmail());
@@ -65,12 +66,14 @@ public class RefreshTokenService {
     deleteRefreshToken(oldRefreshToken);
     refreshTokenRepository.flush();
     RefreshToken newRefreshToken = RefreshToken.create(user, refreshExpirationSeconds);
+    refreshTokenRepository.save(newRefreshToken);
     log.info("Refresh token rotated for user: {}", user.getEmail());
     return newRefreshToken;
   }
 
+  @Transactional
   public void deleteRefreshToken(RefreshToken refreshToken) {
-    log.info("Deleting refresh token: {}", refreshToken.getToken());
+    log.info("Deleting refresh token for user: {}", refreshToken.getUser().getEmail());
     refreshTokenRepository.delete(refreshToken);
   }
 
